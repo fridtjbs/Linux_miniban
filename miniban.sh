@@ -2,17 +2,17 @@
 
 declare -A IPS
 
-#Sjekker om bruker er ROOT, så den har de nødvendige rettighetene for programmet
+# Sjekker om bruker er ROOT, så den har de nødvendige rettighetene for programmet
 if [[ "$USER" != root ]]; then
 	echo"You must be root" 1>&2
 	exit
 fi
 echo "Running miniban, CTRL+C to exit"
 
-#Gir mulighet til å stoppe prosseser
+# Gir mulighet til å stoppe prosseser
 trap "kill $(jobs -p)" EXIT
 
-#Funksjonen som kjører unban.sh på IP-adresser som har vært i miniban.db i 10 minutter
+# Funksjonen som kjører unban.sh på IP-adresser som har vært i miniban.db i 10 minutter
 update(){
 while IFS="," read IP TIMESTAMP < miniban.db; do
 	if [[ -z $IP ]]; then
@@ -31,7 +31,7 @@ while true; do
 sleep 1
 done&
 
-#Funksjonen som leser og teller opp IP-adressene til mislykkede tilkoblingsforsøk og sender IP-adresser som er telt 3 ganger til ban.sh
+# Funksjonen som leser og teller opp IP-adressene til mislykkede tilkoblingsforsøk og sender IP-adresser som er telt 3 ganger til ban.sh
 journalctl -f -u ssh -n 0 | grep Failed --line-buffered | grep --line-buffered -o '[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+' | while read IP; do
 
 	IPS["$IP"]=$(( IPS["$IP"] += 1 ))

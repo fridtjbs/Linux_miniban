@@ -1,18 +1,18 @@
 #!/bin/bash
 
-#Setting variables
+# Setter variables
 IPADDR="$1"
 
-#BUgfix
+# Sjekker om en IP-adresse følger med unban.sh
 if [[ -z "$IPADDR" ]]; then
 	echo "usage: $0 <ip adresse>" 1>&2
 	exit
 fi
 
-# Unbanning IP
+# Unbanner IP-adressen
 echo "Unbanning $IPADDR"
 sudo iptables -D INPUT -s "$IPADDR" -j DROP
 
-# Removing IP from database
+# Fjerner IP-adressen fra miniban.db
 sed -i "/$IPADDR/d" miniban.db
 
